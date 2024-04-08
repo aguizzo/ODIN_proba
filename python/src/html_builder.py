@@ -1,6 +1,10 @@
+import os
+import pkgutil
 
-def build_html(json_data):
-    load_d3 = """\
+def load_d3_script(online=False):
+  d3_script = ""
+  if online:
+    d3_script = """\
 <script>
     requirejs.config({
         paths: { 
@@ -9,9 +13,28 @@ def build_html(json_data):
     });
 </script>
 """
+  else:
+    path = os.path.join(os.path.dirname(os.path.abspath(__file__)),"..", "lib", "d3.v4.min.js")
+    with open(path, 'r', encoding='utf-8') as file:
+        d3_script = """\
+<script type=text/javascript>
+{script}
+</script>    
+""".format(script=file.read())
 
-    require_start = 'require(["d3"], function(d3) {'
-    require_end = "});"
+  return d3_script
+    
+    
+
+def build_html(json_data, online=False):
+    require_start = ''
+    require_end = ''
+    
+    load_d3 = load_d3_script(online)
+
+    if online:
+      require_start = 'require(["d3"], function(d3) {'
+      require_end = "});"
 
     select_svg="""\
 let svg = d3.select("svg");
