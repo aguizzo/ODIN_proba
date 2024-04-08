@@ -17,7 +17,7 @@ def load_d3_script(online=False):
     path = os.path.join(os.path.dirname(os.path.abspath(__file__)),"..", "lib", "d3.v4.min.js")
     with open(path, 'r', encoding='utf-8') as file:
         d3_script = """\
-<script type=text/javascript>
+<script type="text/javascript">
 {script}
 </script>    
 """.format(script=file.read())
@@ -153,7 +153,12 @@ async function postToServer(nodeId) {
     } catch (error) {
       console.error(error);
     }
-  }"""
+  }
+
+  function check() {
+    console.log("reading all the script")
+  }
+  """
 
     main_script="""\
 {select_svg}
@@ -175,14 +180,16 @@ async function postToServer(nodeId) {
 
 
     html = """\
+<div>
 {load_d3}
 <svg width="600" height="600"></svg>
 
-<script>
+<script type="text/javascript">
 {require_start}
     {main_script}
 {require_end}
-</script>""".format(
+</script>
+</div>""".format(
         load_d3=load_d3,
         require_start=require_start,
         main_script=main_script,
